@@ -6,10 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_user_card"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true"
+        android:paddingBottom="3dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:orientation="vertical"
+            android:clipToPadding="false">
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:id="@+id/rv_user_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
 
 
 </LinearLayout>
