@@ -9,4 +9,5 @@ data class UserCardInfo(
     , val start_time: String? = ""
     , val end_time: String? = ""
     , var time: String? = ""
+    , var current_time: String? = end_time
 )

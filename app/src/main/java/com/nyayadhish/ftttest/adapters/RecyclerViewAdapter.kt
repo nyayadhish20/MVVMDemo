@@ -38,45 +38,65 @@ class RecyclerViewAdapter(private val mList: ArrayList<UserCardInfo>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(mList.isNotEmpty()){
+        if (mList.isNotEmpty()) {
             holder.setIsRecyclable(false)
             holder.itemView.tv_name.text = mList[position].name
             holder.itemView.tv_email.text = mList[position].email
-            holder.itemView.start_time.text = String.format("%s %s","Start Time:",mList[position].start_time)
-            holder.itemView.end_time.text = String.format("%s %s","End Time:",mList[position].end_time)
-            holder.itemView.iv_user_image.setImageDrawable(mContext.getDrawable(mList[position].profileImage?:0))
+            holder.itemView.start_time.text =
+                String.format("%s %s", "Start Time:", mList[position].start_time)
+            holder.itemView.end_time.text =
+                String.format("%s %s", "End Time:", mList[position].end_time)
+            holder.itemView.iv_user_image.setImageDrawable(
+                mContext.getDrawable(
+                    mList[position].profileImage ?: 0
+                )
+            )
             holder.itemView.counter.text = mList[position].time
 
+            if (holder.adapterPosition >= 0 && holder.adapterPosition < mList.size) {
 
+                holder.handler.postDelayed({
+                    holder.timer = object : CountDownTimer(
+                        ((mList[holder.adapterPosition].current_time?.toLong()?.minus(
+                            mList[holder.adapterPosition].start_time?.toLong() ?: 0
+                        )) ?: 0) * 1000, 1000
+                    ) {
+                        override fun onFinish() {
+                            Log.i("List Size = ", mList.size.toString())
+                            Log.i("List position = ", position.toString())
+                            if (holder.adapterPosition >= 0 && holder.adapterPosition < mList.size) {
+                                mList.remove(mList[holder.adapterPosition])
+//                                notifyItemRemoved(holder.adapterPosition)
+                                //notifyDataSetChanged()
+                                val itemCount = itemCount - holder.adapterPosition
+                                notifyItemRangeChanged(
+                                    holder.adapterPosition,
+                                    itemCount-1
+                                )
+                            }
+                        }
 
-            holder.handler.postDelayed({
-                holder.timer = object: CountDownTimer(((mList[position].end_time?.toLong()?.minus(mList[position].start_time?.toLong()?:0))?:0)*1000,1000){
-                    override fun onFinish() {
-                        Log.i("List Size = ",mList.size.toString())
-                        Log.i("List position = ",position.toString())
-                        if(position < mList.size) {
-                            mList.remove(mList[position])
-                            notifyItemRemoved(position)
-                            //notifyDataSetChanged()
-                            //notifyItemRangeChanged(position,itemCount.minus(position))
+                        override fun onTick(millisUntilFinished: Long) {
+                            holder.updateText((millisUntilFinished.div(1000)).toString())
+                            if (holder.adapterPosition >= 0 && holder.adapterPosition < mList.size) {
+                                mList[holder.adapterPosition].time =
+                                    (millisUntilFinished.div(1000)).toString()
+                                mList[holder.adapterPosition].current_time =
+                                    (millisUntilFinished.div(1000)).toString()
+                            }
                         }
                     }
-
-                    override fun onTick(millisUntilFinished: Long) {
-                        holder.updateText((millisUntilFinished.div(1000)).toString())
-
-                    }
-                }
-                (holder.timer as CountDownTimer).start()
-            },(mList[position].start_time?.toLong()?:0)*1000)
+                    (holder.timer as CountDownTimer).start()
+                }, (mList[holder.adapterPosition].start_time?.toLong() ?: 0) * 1000)
+            }
         }
     }
 
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun updateText(time: String){
-            counter.text  = time
+        fun updateText(time: String) {
+            counter.text = time
         }
 
         var counter: TextView = view.findViewById(R.id.counter)

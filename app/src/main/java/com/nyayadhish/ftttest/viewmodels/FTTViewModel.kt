@@ -7,11 +7,11 @@ import com.nyayadhish.ftttest.R
 import com.nyayadhish.ftttest.model.UserCardInfo
 
 class FTTViewModel: ViewModel(){
-     val testDataLive = MutableLiveData<List<UserCardInfo>>()
+     private val testDataLive = MutableLiveData<List<UserCardInfo>>()
 
     fun getListData() : MutableLiveData<List<UserCardInfo>>{
         Log.i("ViewModel","In View model")
-        var mList: ArrayList<UserCardInfo> = arrayListOf()
+        val mList: ArrayList<UserCardInfo> = arrayListOf()
         mList.add(UserCardInfo("Bruce Wayne","batman@jl.com", R.drawable.user_1,"0","30",""))
         mList.add(UserCardInfo("Barry Allen","barry@jl.com",R.drawable.user_1,"10","100",""))
         mList.add(UserCardInfo("Clerk Kent","superman@jl.com",R.drawable.user_1,"0","20",""))
@@ -22,6 +22,4 @@ class FTTViewModel: ViewModel(){
         testDataLive.value = mList
         return testDataLive
     }
-
-
 }
