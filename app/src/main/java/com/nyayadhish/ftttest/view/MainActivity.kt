@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.nyayadhish.ftttest.R
+import com.nyayadhish.ftttest.adapters.RecyclerViewAdapter
 import com.nyayadhish.ftttest.model.UserCardInfo
 import com.nyayadhish.ftttest.viewmodels.FTTViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,8 +18,7 @@ import kotlinx.android.synthetic.main.list_item.view.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: FTTViewModel
-    //private var mList : ArrayList<UserCardInfo> = arrayListOf()
-//    private lateinit var mAdapter: RecyclerViewAdapter
+    private lateinit var mAdapter: RecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +31,21 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(FTTViewModel::class.java)
     }
 
+    /**
+     * Observe the events of live data
+     */
     private fun setObserver() {
         viewModel.getListData().observe(this, Observer {
             when (it) {
-                is ArrayList<UserCardInfo> -> setRecyclerViewAdapter(it)
+                is ArrayList<UserCardInfo> -> inflateUI(it)
             }
         })
     }
 
-    private fun setRecyclerViewAdapter(mList: java.util.ArrayList<UserCardInfo>) {
+    /**
+     * Inflate UI dynamic as per list
+     */
+    private fun inflateUI(mList: ArrayList<UserCardInfo>) {
         for (position in 0 until mList.size) {
             val view = LayoutInflater.from(this).inflate(
                 R.layout.list_item,
@@ -80,9 +87,15 @@ class MainActivity : AppCompatActivity() {
 
             ll_card_View.addView(view)
         }
-        /*
+    }
+    /**
+     * Tried with Another approach as well
+     */
+
+    private fun setRecyclerViewAdapter(mList: java.util.ArrayList<UserCardInfo>) {
         rv_user_card.layoutManager = LinearLayoutManager(this)
         mAdapter = RecyclerViewAdapter(mList)
-        rv_user_card.adapter = mAdapter*/
+        rv_user_card.adapter = mAdapter
     }
+
 }

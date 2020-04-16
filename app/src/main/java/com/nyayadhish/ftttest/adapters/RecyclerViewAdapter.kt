@@ -98,7 +98,6 @@ class RecyclerViewAdapter(private val mList: ArrayList<UserCardInfo>) :
         fun updateText(time: String) {
             counter.text = time
         }
-
         var counter: TextView = view.findViewById(R.id.counter)
         val handler = Handler()
         var timer: CountDownTimer? = null
